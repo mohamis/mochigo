@@ -7,7 +7,7 @@ An app for mochi lovers.
 
 ## 📍 Getting Started
 
-This project is made on Flutter v3.4.0-17.2.pre.
+This project is made on Flutter 3.3.2 • channel stable •.
 
 The Mochigo project is a project that aims to create an app for selling and buying Mochi.
 Mochi (餅, もち) is a Japanese rice cake made of mochigome, a short-grain japonica glutinous rice, and sometimes other ingredients such as water, sugar, and cornstarch. The rice is pounded into paste and molded into the desired shape.
