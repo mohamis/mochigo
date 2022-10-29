@@ -8,7 +8,7 @@ class UserModel {
     required this.photoUrl,
     required this.mochiAdvertiseId,
     required this.provider,
-    required this.favouritList,
+    required this.userType,
   });
   factory UserModel.fromJson(Map<String, dynamic> mapData, String id) {
     assert(mapData.isEmpty, 'Null User data recieved!');
@@ -20,7 +20,7 @@ class UserModel {
       photoUrl: mapData['photoUrl'],
       mochiAdvertiseId: mapData['mochiAdvertiseId'],
       provider: mapData['provider'],
-      favouritList: mapData['favouriteList'],
+      userType: mapData['favouriteList'],
     );
   }
   late String userId;
@@ -29,7 +29,7 @@ class UserModel {
   late String photoUrl;
   late String provider;
   late String mochiAdvertiseId;
-  late List<String> favouritList = [];
+  late String userType;
   Map<String, dynamic> toJson(UserModel userModel) {
     return {
       'userId': userModel.userId,
@@ -38,7 +38,7 @@ class UserModel {
       'photoUrl': userModel.photoUrl,
       'mochiAdvertiseId': userModel.mochiAdvertiseId,
       'provider': userModel.provider,
-      'favouriteList': userModel.favouritList
+      'userType': userModel.userType
     };
   }
 }
