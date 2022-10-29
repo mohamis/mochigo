@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 
 class ProductController extends GetxController {
-  var isAddLoading = false.obs;
+  RxBool isAddLoading = false.obs;
 
   void addToCart() {
     isAddLoading.value = true;

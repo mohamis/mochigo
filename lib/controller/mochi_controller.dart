@@ -5,10 +5,10 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:mochigo/core/models/mochi_model.dart';
-import 'package:mochigo/providers/storage_service.dart';
+import 'package:mochigo/services/storage_service.dart';
 
 class MochiProvider extends GetxController {
-  Future<void> addMochiForSell(MochiModel mochiModel, List<File> files) async {
+  Future<void> addMochiForSell(MochiModel mochiModel, File files) async {
     try {
       final CollectionReference reference =
           FirebaseFirestore.instance.collection(mochiModel.category);
@@ -17,26 +17,23 @@ class MochiProvider extends GetxController {
           .add(mochiModel.toJson(mochiModel))
           .then((DocumentReference<Object?> value) {
         final StorageService service = StorageService();
-        service.uploadFiles(files, value.id).then((List<String> list) {
-          print(list);
+        service.uploadSingleFile(files, value.id, 0).then((String list) {
           reference.doc(value.id).update({'images': list, 'id': value.id});
         });
       });
 
       // reference.
-    } catch (PlatFormException) {
-      print(PlatFormException.toString());
+    } catch (platFormException) {
+      Get.snackbar(
+        'An error occurred when adding mochi to the database!',
+        platFormException.toString(),
+      );
     }
   }
 
-  // Future<List<PetModel>> getPetFromCategory(String category) async {
-  //   try {
-  //     List<PetModel> petList = [];
-  //     DocumentSnapshot snapshot = await _petCollection.doc(category).get();
-  //     // QuerySnapshot snap = snapshot.data() as QuerySnapshot;
-
-  //   } catch (PlatFormExceptio) {
-  //     print(PlatFormExceptio.toString());
-  //   }
-  // }
+  Future<List> getMochisFromCategory(String category) async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection(category).get();
+    return snapshot.docs;
+  }
 }

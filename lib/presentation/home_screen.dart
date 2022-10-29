@@ -1,19 +1,17 @@
 // ignore_for_file: library_private_types_in_public_api, always_specify_types, use_named_constants
 
-import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mochigo/core/models/mochi_model.dart';
+import 'package:mochigo/controller/login_controller.dart';
+import 'package:mochigo/controller/user_controller.dart';
 import 'package:mochigo/core/theme/assets.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/add_mochi_screen.dart';
+import 'package:mochigo/presentation/cart_screen.dart';
+import 'package:mochigo/presentation/catalog_list.dart';
 import 'package:mochigo/presentation/login_screen.dart';
-import 'package:mochigo/presentation/mochi_details_screen.dart';
 import 'package:mochigo/presentation/user_details_screen.dart';
-import 'package:mochigo/providers/login_provider.dart';
-import 'package:mochigo/providers/storage_service.dart';
-import 'package:mochigo/providers/user_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,53 +22,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final LoginProvider loginProvider = Get.find<LoginProvider>();
+
 //testing purpose data
-  List<String> categories = [
-    'Filled mochi',
-    'Special',
-    'Mystery Mochi',
-    'Premium'
-  ];
+  List<String> categories = ['Filled', 'Special', 'Mystery Box', 'Boxes'];
 
-  late String selectedCategory = 'Filled mochi';
-
-  List<MochiModel> mochiList = [
-    MochiModel(
-      name: 'El Pistachio',
-      id: '1',
-      category: 'Premium',
-      ownerId: '220',
-      images: 'assets/images/products/mochi-pistachio.jpg',
-      description:
-          'This mochi alone is a journey between the Middle East and the Far East.',
-      price: 1,
-    ),
-    MochiModel(
-      name: 'Yuzu',
-      id: '1',
-      category: 'Filled mochi',
-      ownerId: '220',
-      images: 'assets/images/products/mochi-yuzu.jpg',
-      description:
-          'Yuzu is one of the most precious members of the extraordinary citrus family.',
-      price: 1,
-    ),
-    MochiModel(
-      name: 'Matcha',
-      id: '1',
-      category: 'Special',
-      ownerId: '220',
-      images: 'assets/images/products/mochi-matcha.jpg',
-      description:
-          'Comes with a sencha-type green tea for a tone-on-tone tasting.',
-      price: 1,
-    ),
-  ];
+  late String selectedCategory = 'Filled';
+  late String liveCategory = 'Filled';
 
   final UserProvider userProvider = Get.find<UserProvider>();
+
   @override
   void initState() {
-    userProvider.getUserLocation();
     super.initState();
   }
 
@@ -81,20 +43,20 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await Get.to(() => AddMochiScreen(size: size));
-          // await StorageService..uploadFiles();
-          final StorageService service = StorageService();
-          List<String> list = await service.uploadFiles(
-              [File(Assets.ADMINVECTOR), File(Assets.MOCHIRETRIEVE)], '1');
-          print(list);
-          final String out =
-              await service.uploadSingleFile(File(Assets.ADMINVECTOR), '1', 1);
-          print(out);
+          loginProvider.userData.userType.compareTo('admin') == 0
+              ? await Get.to(() => AddMochiScreen(size: size))
+              : await Get.to(() => const MyCart());
         },
-        child: const ImageIcon(
-          AssetImage(Assets.ADMINVECTOR),
-          size: 28,
-        ),
+        child: loginProvider.userData.userType.compareTo('admin') == 0
+            ? const ImageIcon(
+                AssetImage(Assets.ADMINVECTOR),
+                size: 28,
+                color: Color.fromARGB(255, 255, 216, 216),
+              )
+            : const Icon(
+                Icons.shopping_cart,
+                color: Color.fromARGB(255, 255, 216, 216),
+              ),
       ),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 211, 245),
@@ -136,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Container(
               margin: const EdgeInsets.all(10.0),
-              width: 40.0, // you can adjust the width as you need
+              width: 40.0, // we can adjust the width as you need
               child: CircleAvatar(
                 maxRadius: 25,
                 backgroundImage: NetworkImage(
@@ -152,30 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 8),
-            //   child: Row(
-            //     children: [
-            //       IconButton(
-            //           onPressed: () {},
-            //           iconSize: 20,
-            //           icon: Icon(Icons.location_on)),
-            //       Text(
-            //         // _userProvider.locationData == null
-            //         //     ? ""
-            //         //     : _userProvider.locationData.latitude.toString() +
-            //         //         " Lat, " +
-            //         //         _userProvider.locationData.longitude.toString() +
-            //         //         " Lng",
-            //         "",
-            //         style: Theme.of(context).textTheme.headline3,
-            //       )
-            //     ],
-            //   ),
-            // ),
-
             catgoriesWidget(size: size),
-            mochiListWidget(size: size)
+            mochiListWidget(size: size),
           ],
         ),
       ),
@@ -183,8 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 //categories secotion
-  Container catgoriesWidget({required Size size}) {
-    return Container(
+  SizedBox catgoriesWidget({required Size size}) {
+    return SizedBox(
       height: 94,
       width: size.width,
       child: ListView(
@@ -192,7 +132,12 @@ class _HomeScreenState extends State<HomeScreen> {
         children: categories.map(
           (String currentCategory) {
             return InkWell(
-              onTap: () => setState(() => selectedCategory = currentCategory),
+              onTap: () => {
+                setState(
+                  () => selectedCategory = currentCategory,
+                ),
+                setState(() => liveCategory = currentCategory),
+              },
               child: Container(
                 padding: const EdgeInsets.all(10),
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
@@ -203,9 +148,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Radius.circular(17),
                   ),
                   color: selectedCategory == currentCategory
-                      ? const Color.fromARGB(255, 255, 250, 250)
-                      // MochigoTheme.FONT_DARK_COLOR
-                      : const Color.fromARGB(233, 214, 214, 214),
+                      ? const Color.fromARGB(255, 255, 216, 216)
+                      : const Color.fromARGB(255, 40, 40, 40),
                 ),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
@@ -215,8 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                           color: selectedCategory == currentCategory
-                              ? const Color.fromARGB(255, 255, 174, 103)
-                              : MochigoTheme.FONT_DARK_COLOR,
+                              ? const Color.fromARGB(255, 40, 40, 40)
+                              : const Color.fromARGB(255, 255, 255, 255),
                         ),
                   ),
                 ),
@@ -230,91 +174,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Expanded mochiListWidget({required Size size}) {
     return Expanded(
-      child: ListView(
-        children: mochiList.map((MochiModel currentMochi) {
-          return Container(
-            height: 180,
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-            decoration: BoxDecoration(
-              border: Border.all(
-                width: 2.0,
-                color: const Color.fromARGB(255, 255, 211, 245),
-              ),
-              borderRadius: BorderRadius.circular(10),
-              color: MochigoTheme.PRIMARY_COLOR,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    margin: const EdgeInsets.all(7),
-                    height: double.infinity,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        currentMochi.images,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                // Spacer(),
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    padding: const EdgeInsets.only(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                currentMochi.name,
-                                style: Theme.of(context).textTheme.titleMedium,
-                                overflow: TextOverflow.fade,
-                              ),
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
-                        Flexible(
-                          child: Text(
-                            currentMochi.description,
-                            style: Theme.of(context).textTheme.labelLarge,
-                            overflow: TextOverflow.clip,
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => Get.to(
-                            () => MochiDetailsScreen(
-                              title: currentMochi.name,
-                              description: currentMochi.description,
-                              image: currentMochi.images,
-                              price: currentMochi.price,
-                            ),
-                          ),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color.fromARGB(255, 255, 211, 245),
-                            ),
-                          ),
-                          child: Text(
-                            "Product Details",
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          );
-        }).toList(),
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection(liveCategory).snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.connectionState != ConnectionState.active) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            ); // 👈 data is loading
+          }
+          if (streamSnapshot.hasError) {
+            return const Text("Something went wrong");
+          }
+          if (streamSnapshot.hasData && streamSnapshot.data!.docs.isEmpty) {
+            return const Text("Document does not exist");
+          }
+          return MyCatalog(streamSnapshot: streamSnapshot);
+        },
       ),
     );
   }

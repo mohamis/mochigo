@@ -99,6 +99,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  dart_cart:
+    dependency: "direct main"
+    description:
+      name: dart_cart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   fake_async:
     dependency: transitive
     description:
@@ -216,6 +223,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.9"
+  flutter_cart:
+    dependency: "direct main"
+    description:
+      name: flutter_cart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.7"
   flutter_facebook_auth:
     dependency: "direct main"
     description:

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:mochigo/providers/login_provider.dart';
-import 'package:mochigo/providers/mochi_provider.dart';
-import 'package:mochigo/providers/user_provider.dart';
+import 'package:mochigo/controller/login_controller.dart';
+import 'package:mochigo/controller/mochi_controller.dart';
+import 'package:mochigo/controller/user_controller.dart';
 
 void initProvider() {
   //login provider

@@ -7,12 +7,11 @@ import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mochigo/controller/login_controller.dart';
+import 'package:mochigo/controller/mochi_controller.dart';
 import 'package:mochigo/core/models/mochi_model.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/home_screen.dart';
-import 'package:mochigo/providers/login_provider.dart';
-import 'package:mochigo/providers/mochi_provider.dart';
-import 'package:mochigo/providers/user_provider.dart';
 
 class AddMochiScreen extends StatefulWidget {
   const AddMochiScreen({super.key, required this.size});
@@ -25,24 +24,24 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String mochiName = '';
+  String mochiPrice = '';
   String mochiCategory = '';
   String description = '';
 
   late String _selectedCategory = '';
 
   List<String> mochisCategory = [
-    'Filled Mochi',
+    'Filled',
     'Special',
-    'Mistery Mochi',
-    'Premium',
+    'Mystery Box',
+    'Boxes',
     'Other',
   ];
 
   late final List<Widget> _imagesWidgetListPrimary = [];
-  List<File> images = [];
+  late File images;
 
   final LoginProvider _loginProvider = Get.find<LoginProvider>();
-  final UserProvider _userProvider = Get.find<UserProvider>();
   final MochiProvider _mochiProvider = Get.find<MochiProvider>();
 
   // pickup image
@@ -53,7 +52,7 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
       _imagesWidgetListPrimary.removeWhere(
         (Widget element) => element == _imagesWidgetListPrimary.last,
       );
-      images.add(File(image!.path));
+      images = File(image!.path);
       _imagesWidgetListPrimary.add(Image.file(File(image.path)));
 
       _imagesWidgetListPrimary.add(imagePickerWidget(widget.size));
@@ -66,7 +65,10 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 211, 245),
-        title: Text("Add Mochi", style: Theme.of(context).textTheme.headline3),
+        foregroundColor: Colors.black,
+        title: const Text(
+          "Add Mochi to the catalog",
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -102,7 +104,6 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
           width: size.width * 0.5,
           decoration: BoxDecoration(
             color: MochigoTheme.PRIMARY_COLOR,
-            // border: Border.all(color: MochigoTheme.FONT_DARK_COLOR),
             borderRadius: BorderRadius.circular(35),
             boxShadow: const [BoxShadow(blurRadius: 5, color: Colors.grey)],
           ),
@@ -112,10 +113,13 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
               const Icon(
                 Icons.add_a_photo,
                 size: 45,
+                color: Colors.white,
               ),
               Text(
                 "Add image \nof the Mochi",
-                style: Theme.of(context).textTheme.bodyText2,
+                style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                      color: Colors.white,
+                    ),
               )
             ],
           ),
@@ -155,6 +159,24 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
             validator: (String? value) {
               if (value!.isEmpty) {
                 return 'Mochi name cannot be empty!';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              "Price of Mochi :",
+              style: Theme.of(context).textTheme.bodyText2,
+            ),
+          ),
+          TextFormField(
+            decoration: const InputDecoration(hintText: 'mochi price'),
+            onSaved: (String? newValue) => mochiPrice = newValue!,
+            keyboardType: TextInputType.number,
+            validator: (String? value) {
+              if (value!.isEmpty) {
+                return 'Mochi price cannot be empty!';
               }
               return null;
             },
@@ -215,9 +237,14 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
               onPressed: () async {
                 await addMochiForSell();
               },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color.fromARGB(255, 255, 216, 216),
+                ),
+              ),
               child: Text(
                 'Submit',
-                style: Theme.of(context).textTheme.headline2,
+                style: Theme.of(context).textTheme.headline3,
               ),
             ),
           )
@@ -228,10 +255,8 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
 
   Future<void> addMochiForSell() async {
     final bool validate = _formKey.currentState!.validate();
-    if (validate && _selectedCategory != '' && images.isNotEmpty) {
+    if (validate && _selectedCategory != '' && images != null) {
       _formKey.currentState!.save();
-      print(images);
-      print("*************");
       //creating new instance of mochimodel
       final MochiModel newMochi = MochiModel(
         name: mochiName,
@@ -239,16 +264,16 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
         category: _selectedCategory,
         ownerId: _loginProvider.userData.userId,
         description: description,
-        images: '1',
-        price: 1,
+        price: double.parse(mochiPrice.replaceAll(",", "")),
+        images: "1",
       );
       await _mochiProvider.addMochiForSell(newMochi, images);
 
-      await Get.off(HomeScreen());
+      await Get.off(const HomeScreen());
     } else if (_selectedCategory == '') {
       Get.snackbar('Error', 'Select appropriate category');
-    } else if (images.isEmpty) {
-      print("images not recieved");
+    } else if (images == null) {
+      Get.snackbar('Error', 'Images were not recieved');
     }
   }
 }

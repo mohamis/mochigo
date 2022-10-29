@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:mochigo/controller/product_controller.dart';
-import 'package:mochigo/model/sm_product_model.dart';
+import 'package:mochigo/models/sm_product_model.dart';
 import 'package:mochigo/utils/color.dart';
 
-class MochiDetailsScreen extends StatelessWidget {
+class MochiDetailsScreen extends StatefulWidget {
   const MochiDetailsScreen({
     Key? key,
     required this.title,
     required this.price,
     required this.description,
     required this.image,
+    required this.id,
   }) : super(key: key);
   final String title;
   final double price;
   final String description;
   final String image;
+  final String id;
 
   @override
-  Widget build(BuildContext context) {
-    final ProductController productController = Get.put(ProductController());
+  __MochiDetailsScreenState createState() => __MochiDetailsScreenState();
+}
 
+class __MochiDetailsScreenState extends State<MochiDetailsScreen> {
+  @override
+  Widget build(BuildContext context) {
     final List<SmProduct> smProducts = [
       SmProduct(image: 'assets/images/products/mochi-yuzu.jpg'),
       SmProduct(image: 'assets/images/products/mochi-choco.jpg'),
@@ -41,8 +43,8 @@ class MochiDetailsScreen extends StatelessWidget {
             height: MediaQuery.of(context).size.height * .35,
             padding: const EdgeInsets.only(bottom: 30),
             width: double.infinity,
-            child: Image.asset(
-              image,
+            child: Image.network(
+              widget.image,
               fit: BoxFit.fill,
             ),
           ),
@@ -50,6 +52,7 @@ class MochiDetailsScreen extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
+                  height: double.infinity,
                   padding: const EdgeInsets.only(top: 40, right: 14, left: 14),
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -73,14 +76,14 @@ class MochiDetailsScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              title,
+                              widget.title,
                               style: GoogleFonts.poppins(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             Text(
-                              '\€$price',
+                              '€${widget.price}',
                               style: GoogleFonts.poppins(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,
@@ -90,7 +93,7 @@ class MochiDetailsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 15),
                         Text(
-                          description,
+                          widget.description,
                           style: GoogleFonts.poppins(
                             fontSize: 15,
                             color: Colors.grey,
@@ -151,49 +154,6 @@ class MochiDetailsScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: Container(
-        height: 100,
-        color: Colors.white,
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () {
-                  productController.addToCart();
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 211, 245),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Obx(
-                    () => productController.isAddLoading.value
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.black,
-                              strokeWidth: 3,
-                            ),
-                          )
-                        : Text(
-                            '+ Add to Cart',
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

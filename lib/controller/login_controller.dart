@@ -1,12 +1,12 @@
-import 'dart:ui';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mochigo/controller/user_controller.dart';
 import 'package:mochigo/core/models/user_model.dart';
 import 'package:mochigo/presentation/login_screen.dart';
-import 'package:mochigo/providers/user_provider.dart';
 
 class LoginProvider extends GetxController {
   late UserModel _user;
@@ -26,7 +26,6 @@ class LoginProvider extends GetxController {
       final LoginResult result = await FacebookAuth.instance.login();
 
       if (result.status == LoginStatus.success) {
-        print(result.status.toString());
         final AccessToken accessToken = result.accessToken!;
 
         final OAuthCredential credential =
@@ -36,26 +35,25 @@ class LoginProvider extends GetxController {
             await FirebaseAuth.instance.signInWithCredential(credential);
 
         userData = UserModel(
-            userId: userCredential.user!.uid,
-            email: userCredential.user!.email as String,
-            name: userCredential.user!.displayName as String,
-            photoUrl: userCredential.user!.photoURL as String,
-            mochiAdvertiseId: '',
-            provider: 'Facebook',
-            favouritList: []);
+          userId: userCredential.user!.uid,
+          email: userCredential.user!.email as String,
+          name: userCredential.user!.displayName as String,
+          photoUrl: userCredential.user!.photoURL as String,
+          mochiAdvertiseId: '',
+          provider: 'Facebook',
+          userType: "user",
+        );
 
         //adding new user data
-        final UserProvider _userProvider = Get.find<UserProvider>();
-        await _userProvider.addUser(userData);
+        final UserProvider userProvider = Get.find<UserProvider>();
+        await userProvider.addUser(userData);
 
         Get.snackbar('Logged in successfully', '');
         return true;
       }
       return false;
-    } catch (PlatFormException) {
-      print(PlatFormException.toString());
-
-      Get.snackbar(PlatFormException.toString(), '');
+    } catch (platFormException) {
+      Get.snackbar(platFormException.toString(), '');
 
       return false;
     }
@@ -68,13 +66,11 @@ class LoginProvider extends GetxController {
 
       await FirebaseAuth.instance.signOut();
 
-      Get.offAll(() => LoginScreen());
+      await Get.offAll(() => LoginScreen());
 
       return true;
-    } catch (PlatFormException) {
-      print(PlatFormException.toString());
-
-      Get.snackbar(PlatFormException.toString(), '');
+    } catch (platFormException) {
+      Get.snackbar(platFormException.toString(), '');
 
       return false;
     }
@@ -83,41 +79,41 @@ class LoginProvider extends GetxController {
 //google sign in
   Future<bool> signInWithGoogle() async {
     try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      final GoogleSignIn googleSignIn = GoogleSignIn();
       //sign in with google
       final GoogleSignInAccount? googleSignInAccount =
-          await _googleSignIn.signIn();
+          await googleSignIn.signIn();
 
       if (googleSignInAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSignInAccount.authentication;
 
         final AuthCredential authCredential = GoogleAuthProvider.credential(
-            accessToken: googleSignInAuthentication.accessToken,
-            idToken: googleSignInAuthentication.idToken);
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
 
         final UserCredential userCredential =
             await FirebaseAuth.instance.signInWithCredential(authCredential);
 
         userData = UserModel(
-            userId: userCredential.user!.uid,
-            email: userCredential.user!.email as String,
-            name: userCredential.user!.displayName as String,
-            photoUrl: userCredential.user!.photoURL as String,
-            mochiAdvertiseId: '',
-            favouritList: ['x', 'y', 'z'],
-            provider: 'Google');
+          userId: userCredential.user!.uid,
+          email: userCredential.user!.email as String,
+          name: userCredential.user!.displayName as String,
+          photoUrl: userCredential.user!.photoURL as String,
+          mochiAdvertiseId: '',
+          userType: "user",
+          provider: 'Google',
+        );
       }
       //adding new user data to database
-      final UserProvider _userProvider = Get.find<UserProvider>();
-      await _userProvider.addUser(userData);
+      final UserProvider userProvider = Get.find<UserProvider>();
+      await userProvider.addUser(userData);
       Get.snackbar('Logged in successfully', '');
 
       return true;
-    } catch (PlatFormException) {
-      print(PlatFormException.toString());
-
-      Get.snackbar(PlatFormException.toString(), '');
+    } catch (platFormException) {
+      Get.snackbar(platFormException.toString(), '');
 
       return false;
     }
@@ -126,23 +122,22 @@ class LoginProvider extends GetxController {
 //google signout
   Future<bool> signOutGoogle() async {
     try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      final GoogleSignIn googleSignIn = GoogleSignIn();
 
       await FirebaseAuth.instance.signOut();
 
-      await _googleSignIn.signOut();
+      await googleSignIn.signOut();
 
-      Get.offAll(() => LoginScreen());
+      await Get.offAll(() => LoginScreen());
 
       return true;
-    } catch (PlatFormException) {
-      Get.snackbar('Error', PlatFormException.toString());
+    } catch (platFormException) {
+      Get.snackbar('Error', platFormException.toString());
 
       return false;
     }
   }
 
-  @override
   Future<bool> signInWithEmailAndPassword({
     required String email,
     required String password,
@@ -151,6 +146,12 @@ class LoginProvider extends GetxController {
       final UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       final User? user = FirebaseAuth.instance.currentUser;
+      final UserProvider userProvider = Get.find<UserProvider>();
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance
+              .collection('user')
+              .where('email', isEqualTo: email)
+              .get();
 
       if (user != null) {
         userData = UserModel(
@@ -160,27 +161,51 @@ class LoginProvider extends GetxController {
           photoUrl:
               "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80",
           mochiAdvertiseId: '',
-          favouritList: ['x', 'y', 'z'],
+          userType: snapshot.docs[0].data()['userType'],
           provider: 'Email',
         );
       }
       //adding new user data to database
-      final UserProvider _userProvider = Get.find<UserProvider>();
-      await _userProvider.addUser(userData);
+      await userProvider.addUser(userData);
       Get.snackbar('Sign in user successfully', '');
 
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        Get.snackbar(
+          'User was not found.',
+          'Check if you used the right email address.',
+          colorText: const Color.fromARGB(255, 255, 0, 0),
+        );
         return false;
       } else if (e.code == 'wrong-password') {
-        Get.snackbar('Wrong password provided for that user.', '',
-            colorText: Color.fromARGB(255, 255, 0, 0));
-        print('Wrong password provided for that user.');
+        Get.snackbar(
+          'Wrong password provided for that user.',
+          'Verify the password and try again.',
+          colorText: const Color.fromARGB(255, 255, 0, 0),
+        );
         return false;
       }
       return false;
+    }
+  }
+
+  String getExceptionText(Exception e) {
+    if (e is PlatformException) {
+      switch (e.message) {
+        case 'There is no user record corresponding to this identifier. The user may have been deleted.':
+          return 'User with this e-mail not found.';
+        case 'The password is invalid or the user does not have a password.':
+          return 'Invalid password.';
+        case 'A network error (such as timeout, interrupted connection or unreachable host) has occurred.':
+          return 'No internet connection.';
+        case 'The email address is already in use by another account.':
+          return 'Email address is already taken.';
+        default:
+          return 'Unknown error occured.';
+      }
+    } else {
+      return 'Unknown error occured.';
     }
   }
 
@@ -194,28 +219,41 @@ class LoginProvider extends GetxController {
           .createUserWithEmailAndPassword(email: email, password: password);
       final User? user = FirebaseAuth.instance.currentUser;
 
+      if (username.isEmpty) {
+        Get.snackbar(
+          'You must provide a username!',
+          'Please check again and retry',
+          colorText: const Color.fromARGB(255, 255, 0, 0),
+        );
+
+        return false;
+      }
+
       if (user != null) {
         userData = UserModel(
           userId: userCredential.user!.uid,
           email: userCredential.user!.email as String,
           name: username,
           photoUrl:
-              "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80",
+              'https://images.unsplash.com/photo-1457449940276-e8deed18bfff?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2670&q=80',
           mochiAdvertiseId: '',
-          favouritList: ['x', 'y', 'z'],
+          userType: "user",
           provider: 'Email',
         );
       }
       //adding new user data to database
-      final UserProvider _userProvider = Get.find<UserProvider>();
-      await _userProvider.addUser(userData);
+      final UserProvider userProvider = Get.find<UserProvider>();
+      await userProvider.addUser(userData);
       Get.snackbar('Created user successfully', '');
 
       return true;
-    } catch (PlatFormException) {
-      print(PlatFormException.toString());
-
-      Get.snackbar(PlatFormException.toString(), '');
+    } on FirebaseAuthException catch (e) {
+      final String exception = getExceptionText(e);
+      Get.snackbar(
+        'Creating an account failed',
+        exception,
+        colorText: const Color.fromARGB(255, 255, 0, 0),
+      );
 
       return false;
     }
@@ -230,10 +268,8 @@ class LoginProvider extends GetxController {
       Get.snackbar('You just logged out.', '');
 
       return true;
-    } catch (PlatFormException) {
-      print(PlatFormException.toString());
-
-      Get.snackbar(PlatFormException.toString(), '');
+    } catch (platFormException) {
+      Get.snackbar(platFormException.toString(), '');
 
       return false;
     }

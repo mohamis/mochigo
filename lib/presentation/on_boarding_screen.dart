@@ -142,7 +142,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                    splashScreenData.length, (int index) => buildDots(index)),
+                  splashScreenData.length,
+                  (int index) => buildDots(index),
+                ),
               )
             ],
           );

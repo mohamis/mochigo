@@ -28,9 +28,6 @@ class MochiModel {
   late String ownerId;
   late String description;
   late String images;
-  // late List<String> images = [];
-  late double lat;
-  late double long;
   late double price;
 
   Map<String, dynamic> toJson(MochiModel mochiData) {

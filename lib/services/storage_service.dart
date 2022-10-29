@@ -1,8 +1,10 @@
 // ignore_for_file: always_specify_types, non_constant_identifier_names
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get/get.dart';
 //  as storage_service;
 
 class StorageService {
@@ -14,19 +16,15 @@ class StorageService {
 
     files.forEach((File file) async {
       final int index = files.indexOf(file);
-      print(index);
       current = await uploadSingleFile(file, id, index);
       allUrl.add(current);
     });
 
-    print(allUrl);
     return allUrl;
   }
 
   Future<String> uploadSingleFile(File file, String id, int index) async {
     try {
-      print(file);
-      print("*********");
       final Reference reference = storage
           .ref()
           .child('mochi images')
@@ -41,7 +39,11 @@ class StorageService {
 
       return url;
     } catch (PlatFormException) {
-      print(PlatFormException.toString());
+      Get.snackbar(
+        'Problem while uploading',
+        PlatFormException.toString(),
+        colorText: const Color.fromARGB(255, 255, 0, 0),
+      );
       return 'Problem while uploading';
     }
   }

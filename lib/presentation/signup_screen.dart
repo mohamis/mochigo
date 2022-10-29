@@ -3,13 +3,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mochigo/controller/login_controller.dart';
 import 'package:mochigo/core/theme/assets.dart';
-import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/home_screen.dart';
 import 'package:mochigo/presentation/login_screen.dart';
-import 'package:mochigo/providers/login_provider.dart';
 
 class SignUpScreen extends StatelessWidget {
+  SignUpScreen({super.key});
+
   final LoginProvider loginProvider = Get.find<LoginProvider>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();

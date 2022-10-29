@@ -3,12 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class CircularBorder extends StatelessWidget {
-  const CircularBorder(
-      {super.key,
-      this.color = Colors.blue,
-      this.size = 70,
-      this.width = 5.0,
-      required this.icon});
+  const CircularBorder({
+    super.key,
+    this.color = Colors.blue,
+    this.size = 70,
+    this.width = 5.0,
+    required this.icon,
+  });
   final Color color;
   final double size;
   final double width;
@@ -52,9 +53,6 @@ class MyPainter extends CustomPainter {
     final double percent = (size.width * 0.001) / 2;
 
     final double arcAngle = 2 * pi * percent;
-    // print("$radius - radius");
-    // print("$arcAngle - arcAngle");
-    // print("${radius / arcAngle} - divider");
 
     for (int i = 0; i < 8; i++) {
       final double init = (-pi / 2) * (i / 2);
@@ -66,11 +64,6 @@ class MyPainter extends CustomPainter {
         false,
         complete,
       );
-      // if (i % 2 == 0) {
-      // } else {
-      //   canvas.drawArc(new Rect.fromCircle(center: center, radius: radius),
-      //       init, arcAngle, false, current);
-      // }
     }
   }
 

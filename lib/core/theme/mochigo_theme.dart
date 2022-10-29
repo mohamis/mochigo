@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class MochigoTheme {
   //color
-  static const Color PRIMARY_COLOR = Color(0xFFf1eeeb);
+  static const Color PRIMARY_COLOR = Color.fromARGB(255, 40, 40, 40);
   static const Color FONT_DARK_COLOR = Color(0xFF120e0b);
   static const Color FONT_LIGHT_COLOR = Color(0XFFda943a);
   static const Color COLOR4 = Color(0xFF8f7b8c);
@@ -18,10 +18,12 @@ class MochigoTheme {
   static ThemeData mytheme = ThemeData(
     visualDensity: VisualDensity.adaptivePlatformDensity,
     primaryColor: PRIMARY_COLOR,
-    scaffoldBackgroundColor: PRIMARY_COLOR,
+    scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(FONT_DARK_COLOR),
+        backgroundColor: MaterialStateProperty.all<Color>(
+          const Color.fromARGB(255, 255, 255, 255),
+        ),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
-import 'package:mochigo/providers/login_provider.dart';
-import 'package:mochigo/providers/user_provider.dart';
+import 'package:mochigo/controller/login_controller.dart';
+import 'package:mochigo/controller/user_controller.dart';
+import 'package:mochigo/core/theme/mochigo_theme.dart';
 
 class UserDetailsScreen extends StatefulWidget {
   const UserDetailsScreen({super.key});
@@ -17,7 +18,6 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
   @override
   void initState() {
-    userProvider.getUserLocation();
     super.initState();
   }
 
@@ -43,8 +43,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             onPressed: () {},
           )
         ],
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        foregroundColor: Colors.black,
+        backgroundColor: MochigoTheme.PRIMARY_COLOR,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -56,7 +56,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   bottomLeft: Radius.circular(15),
                   bottomRight: Radius.circular(15),
                 ),
-                color: Colors.white,
+                color: MochigoTheme.PRIMARY_COLOR,
               ),
               child: Column(
                 children: <Widget>[
@@ -76,7 +76,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                     loginProvider.userData.name,
                     style: const TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -85,7 +85,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                   ),
                   Text(
                     loginProvider.userData.userId,
-                    style: const TextStyle(fontSize: 15, color: Colors.grey),
+                    style: const TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 221, 221, 221)),
                   ),
                   const SizedBox(
                     height: 20,
@@ -101,7 +103,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             ),
             Text(
               loginProvider.userData.userId,
-              style: const TextStyle(fontSize: 15, color: Colors.grey),
+              style: const TextStyle(
+                  fontSize: 15, color: MochigoTheme.PRIMARY_COLOR),
             ),
           ],
         ),
