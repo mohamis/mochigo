@@ -40,4 +40,17 @@ class UserProvider extends GetxController {
       Get.snackbar('Error', PlatformException.toString());
     }
   }
+
+  Future<String> findUserName(String email) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .get();
+      return snapshot.docs[0].data()['name'];
+    } catch (PlatformException) {
+      Get.snackbar('Error', PlatformException.toString());
+      return 'name not found';
+    }
+  }
 }

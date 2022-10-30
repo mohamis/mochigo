@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mochigo/presentation/order_screen.dart';
 import 'package:mochigo/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -58,8 +60,11 @@ class _CartList extends StatelessWidget {
           },
         ),
         title: Text(
-          '${cartProvider.flutterCart.cartItem[index].quantity.toString()} x ${cartProvider.flutterCart.cartItem[index].productName.toString()}',
+          '${cartProvider.flutterCart.cartItem[index].quantity.toString()} x ${cartProvider.flutterCart.cartItem[index].productName.toString()} ',
           style: itemNameStyle,
+        ),
+        subtitle: Text(
+          '\$${cartProvider.flutterCart.cartItem[index].unitPrice.toString()}',
         ),
       ),
     );
@@ -96,8 +101,11 @@ class _CartTotal extends StatelessWidget {
             const SizedBox(width: 24),
             TextButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Buying not supported yet.')),
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Buying not supported yet.')),
+                // );
+                Get.to(
+                  () => const PaymentScreen(),
                 );
               },
               style: TextButton.styleFrom(

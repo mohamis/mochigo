@@ -8,6 +8,7 @@ import 'package:mochigo/controller/user_controller.dart';
 import 'package:mochigo/core/theme/assets.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/add_mochi_screen.dart';
+import 'package:mochigo/presentation/admin_orders_screen.dart';
 import 'package:mochigo/presentation/cart_screen.dart';
 import 'package:mochigo/presentation/catalog_list.dart';
 import 'package:mochigo/presentation/login_screen.dart';
@@ -39,87 +40,90 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          loginProvider.userData.userType.compareTo('admin') == 0
-              ? await Get.to(() => AddMochiScreen(size: size))
-              : await Get.to(() => const MyCart());
-        },
-        child: loginProvider.userData.userType.compareTo('admin') == 0
-            ? const ImageIcon(
-                AssetImage(Assets.ADMINVECTOR),
-                size: 28,
-                color: Color.fromARGB(255, 255, 216, 216),
-              )
-            : const Icon(
-                Icons.shopping_cart,
-                color: Color.fromARGB(255, 255, 216, 216),
-              ),
-      ),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 211, 245),
-        elevation: 0,
-        leading: IconButton(
+    if (loginProvider.userData.userType.compareTo('admin') == 0) {
+      return OrdersAdminScreen();
+    } else {
+      return Scaffold(
+        floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final bool outCome = await loginProvider.logoutEmail();
-
-            //route if sign in successful
-            if (outCome) {
-              await Get.to(() => LoginScreen());
-            }
+            loginProvider.userData.userType.compareTo('admin') == 0
+                ? await Get.to(() => AddMochiScreen(size: size))
+                : await Get.to(() => const MyCart());
           },
-          icon: const Icon(Icons.no_accounts_sharp),
-          color: const Color.fromARGB(255, 0, 0, 0),
-        ),
-        title: Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: 'Hi ',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              TextSpan(
-                text: loginProvider.userData.name,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  foreground: Paint()..color = MochigoTheme.FONT_DARK_COLOR,
+          child: loginProvider.userData.userType.compareTo('admin') == 0
+              ? const ImageIcon(
+                  AssetImage(Assets.ADMINVECTOR),
+                  size: 28,
+                  color: Color.fromARGB(255, 255, 216, 216),
+                )
+              : const Icon(
+                  Icons.shopping_cart,
+                  color: Color.fromARGB(255, 255, 216, 216),
                 ),
-              )
-            ],
-          ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Get.to(() => const UserDetailsScreen());
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 255, 211, 245),
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () async {
+              final bool outCome = await loginProvider.logoutEmail();
+
+              //route if sign in successful
+              if (outCome) {
+                await Get.to(() => LoginScreen());
+              }
             },
-            child: Container(
-              margin: const EdgeInsets.all(10.0),
-              width: 40.0, // we can adjust the width as you need
-              child: CircleAvatar(
-                maxRadius: 25,
-                backgroundImage: NetworkImage(
-                  loginProvider.userData.photoUrl,
+            icon: const Icon(Icons.no_accounts_sharp),
+            color: const Color.fromARGB(255, 0, 0, 0),
+          ),
+          title: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Hi ',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                TextSpan(
+                  text: loginProvider.userData.name,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    foreground: Paint()..color = MochigoTheme.FONT_DARK_COLOR,
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Get.to(() => const UserDetailsScreen());
+              },
+              child: Container(
+                margin: const EdgeInsets.all(10.0),
+                width: 40.0, // we can adjust the width as you need
+                child: CircleAvatar(
+                  maxRadius: 25,
+                  backgroundImage: NetworkImage(
+                    loginProvider.userData.photoUrl,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            catgoriesWidget(size: size),
-            mochiListWidget(size: size),
           ],
         ),
-      ),
-    );
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              catgoriesWidget(size: size),
+              mochiListWidget(size: size),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
 //categories secotion

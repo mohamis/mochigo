@@ -31,6 +31,40 @@ class MochiProvider extends GetxController {
     }
   }
 
+  Future<void> updateMochiForCollect(String id, String status) async {
+    try {
+      final CollectionReference reference =
+          FirebaseFirestore.instance.collection('orders');
+
+      await reference.doc(id).update({'orderStatus': status});
+
+      // reference.
+    } catch (platFormException) {
+      Get.snackbar(
+        'An error occurred when updating the order!',
+        platFormException.toString(),
+      );
+    }
+  }
+
+  Future<void> addMochiOrder(List<MochiOrder> mochiModel) async {
+    try {
+      final CollectionReference reference =
+          FirebaseFirestore.instance.collection('orders');
+
+      mochiModel.forEach((MochiOrder file) async {
+        await reference.add(file.toJson(file));
+      });
+
+      // reference.
+    } catch (platFormException) {
+      Get.snackbar(
+        'An error occurred when adding mochi to the order database!',
+        platFormException.toString(),
+      );
+    }
+  }
+
   Future<List> getMochisFromCategory(String category) async {
     final snapshot =
         await FirebaseFirestore.instance.collection(category).get();

@@ -42,3 +42,38 @@ class MochiModel {
     };
   }
 }
+
+class MochiOrder {
+  MochiOrder({
+    required this.name,
+    required this.ownerId,
+    required this.items,
+    required this.orderStatus,
+    required this.price,
+  });
+  factory MochiOrder.fromJson(Map<String, dynamic> data, String id) {
+    assert(data.isEmpty, 'Mochi Order cannot be null!');
+    return MochiOrder(
+      name: data['name'],
+      ownerId: data['ownerId'],
+      items: data['items'],
+      orderStatus: data['orderStatus'],
+      price: data['price'],
+    );
+  }
+  late String name;
+  late String ownerId;
+  late double items;
+  late String orderStatus;
+  late double price;
+
+  Map<String, dynamic> toJson(MochiOrder mochiData) {
+    return {
+      'name': mochiData.name,
+      'ownerId': mochiData.ownerId,
+      'items': mochiData.items,
+      'orderStatus': mochiData.orderStatus,
+      'totalPrice': mochiData.price,
+    };
+  }
+}

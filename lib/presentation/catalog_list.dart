@@ -6,18 +6,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cart/model/cart_model.dart';
 import 'package:get/get.dart';
+import 'package:mochigo/controller/login_controller.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/mochi_details_screen.dart';
 import 'package:mochigo/providers/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 class MyCatalog extends StatelessWidget {
-  const MyCatalog({
+  MyCatalog({
     super.key,
     required this.streamSnapshot,
   });
 
   final AsyncSnapshot<QuerySnapshot> streamSnapshot;
+  final LoginProvider loginProvider = Get.find<LoginProvider>();
 
   @override
   Widget build(BuildContext context) {
@@ -113,19 +115,24 @@ class MyCatalog extends StatelessWidget {
                 ),
               ),
             ),
-            Consumer<CartProvider>(
-              builder:
-                  (BuildContext context, CartProvider cart, Widget? child) {
-                return _AddButton(
-                  id: streamSnapshot.data?.docs[index].get('id'),
-                  price: streamSnapshot.data?.docs[index].get('price'),
-                  title: streamSnapshot.data?.docs[index].get('name'),
-                  description:
-                      streamSnapshot.data?.docs[index].get('description'),
-                  image: '',
-                );
-              },
-            ),
+            if (loginProvider.userData.userType.compareTo('admin') == 0)
+              const SizedBox(
+                height: 30,
+              )
+            else
+              Consumer<CartProvider>(
+                builder:
+                    (BuildContext context, CartProvider cart, Widget? child) {
+                  return _AddButton(
+                    id: streamSnapshot.data?.docs[index].get('id'),
+                    price: streamSnapshot.data?.docs[index].get('price'),
+                    title: streamSnapshot.data?.docs[index].get('name'),
+                    description:
+                        streamSnapshot.data?.docs[index].get('description'),
+                    image: '',
+                  );
+                },
+              ),
           ],
         ),
       ),
