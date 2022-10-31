@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:flutter_carousel_slider/carousel_slider_indicators.dart';
@@ -12,6 +13,7 @@ import 'package:mochigo/controller/mochi_controller.dart';
 import 'package:mochigo/core/models/mochi_model.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/home_screen.dart';
+import 'dart:html' as html;
 
 class AddMochiScreen extends StatefulWidget {
   const AddMochiScreen({super.key, required this.size});
@@ -46,17 +48,40 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
 
   // pickup image
   Future<void> pickImage() async {
-    final PickedFile? image = await ImagePicker.platform
-        .pickImage(source: ImageSource.gallery, imageQuality: 40);
-    setState(() {
-      _imagesWidgetListPrimary.removeWhere(
-        (Widget element) => element == _imagesWidgetListPrimary.last,
-      );
-      images = File(image!.path);
-      _imagesWidgetListPrimary.add(Image.file(File(image.path)));
+    if (!kIsWeb) {
+      final PickedFile? image = await ImagePicker.platform
+          .pickImage(source: ImageSource.gallery, imageQuality: 40);
+      setState(() {
+        _imagesWidgetListPrimary.removeWhere(
+          (Widget element) => element == _imagesWidgetListPrimary.last,
+        );
+        images = File(image!.path);
 
-      _imagesWidgetListPrimary.add(imagePickerWidget(widget.size));
-    });
+        _imagesWidgetListPrimary.add(Image.file(File(image.path)));
+
+        _imagesWidgetListPrimary.add(imagePickerWidget(widget.size));
+      });
+    }
+    // WEB
+    else if (kIsWeb) {
+      List<html.File>? webFiles = [];
+      html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+      uploadInput.click();
+      uploadInput.onChange.listen(
+        (e) {
+          webFiles = uploadInput.files;
+          for (html.File webFile in webFiles!) {
+            if (webFile.size < 4194304) {
+              images = webFile as File;
+
+              // _imagesWidgetListPrimary.add(webFile);
+            }
+          }
+        },
+      );
+    } else {
+      print("Permission not granted");
+    }
   }
 
   @override

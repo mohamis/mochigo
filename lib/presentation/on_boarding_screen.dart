@@ -46,13 +46,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
         child: Column(
           children: [
-            page(size: size),
+            page(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50),
               child: Container(
@@ -98,7 +97,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 
-  Expanded page({required Size size}) {
+  Expanded page() {
     return Expanded(
       child: PageView.builder(
         itemCount: splashScreenData.length,
@@ -112,10 +111,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             children: [
               const Spacer(),
               const Spacer(),
-              const Spacer(),
+              const SizedBox(height: 20),
               SizedBox(
-                height: min<double>(size.height * 0.1, size.width),
-                width: min<double>(size.height * 0.1, size.width),
                 child: Image.asset(
                   Assets.LOGOVECTOR,
                   scale: 1,
@@ -124,8 +121,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
               const Spacer(),
               SizedBox(
-                height: min<double>(size.height * 0.8, size.width),
-                width: min<double>(size.height * 0.8, size.width),
                 child: Image.asset(splashScreenData[index]['image'] as String),
               ),
               const Spacer(),
