@@ -60,7 +60,7 @@ class MyCatalog extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Container(
-                padding: EdgeInsets.only(),
+                padding: const EdgeInsets.only(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

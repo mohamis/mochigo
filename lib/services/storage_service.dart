@@ -25,11 +25,8 @@ class StorageService {
 
   Future<String> uploadSingleFile(File file, String id, int index) async {
     try {
-      final Reference reference = storage
-          .ref()
-          .child('mochi images')
-          .child(id)
-          .child(id + "_" + index.toString());
+      final Reference reference =
+          storage.ref().child('mochi images').child(id).child("${id}_$index");
 
       final UploadTask uploadTask = reference.putFile(file);
 

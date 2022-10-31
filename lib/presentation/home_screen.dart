@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     if (loginProvider.userData.userType.compareTo('admin') == 0) {
-      return OrdersAdminScreen();
+      return const OrdersAdminScreen();
     } else {
       return Scaffold(
         floatingActionButton: FloatingActionButton(

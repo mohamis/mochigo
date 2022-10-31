@@ -65,15 +65,6 @@ class CartProvider extends ChangeNotifier {
     return flutterCart.cartItem;
   }
 
-  void printCartValue() {
-    flutterCart.cartItem.forEach(
-      (CartItem f) => {
-        print(f.productId),
-        print(f.quantity),
-      },
-    );
-  }
-
   void deleteAllCartProvider() {
     flutterCart.deleteAllCart();
   }

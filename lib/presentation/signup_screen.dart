@@ -140,7 +140,6 @@ class SignUpScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6.0),
                   gradient: const LinearGradient(
                     begin: Alignment(-0.95, 0.0),
-                    end: Alignment(1.0, 0.0),
                     colors: [
                       Color.fromARGB(255, 234, 148, 102),
                       Color.fromARGB(255, 255, 175, 100)

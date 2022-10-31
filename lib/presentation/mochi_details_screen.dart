@@ -19,7 +19,7 @@ class MochiDetailsScreen extends StatefulWidget {
   final String id;
 
   @override
-  __MochiDetailsScreenState createState() => __MochiDetailsScreenState();
+  State<MochiDetailsScreen> createState() => __MochiDetailsScreenState();
 }
 
 class __MochiDetailsScreenState extends State<MochiDetailsScreen> {

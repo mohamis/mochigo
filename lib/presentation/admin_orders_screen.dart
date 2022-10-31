@@ -9,7 +9,6 @@ import 'package:mochigo/controller/user_controller.dart';
 import 'package:mochigo/core/theme/assets.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/add_mochi_screen.dart';
-import 'package:mochigo/presentation/home_screen.dart';
 import 'package:mochigo/presentation/login_screen.dart';
 import 'package:mochigo/presentation/order_detail_screen.dart';
 import 'package:mochigo/presentation/user_details_screen.dart';
@@ -90,8 +89,7 @@ class _OrdersAdminScreenState extends State<OrdersAdminScreen> {
 }
 
 Widget getGroupsWidget() {
-  final LoginProvider loginProvider = Get.find<LoginProvider>();
-  final MochiProvider _mochiProvider = Get.find<MochiProvider>();
+  final MochiProvider mochiProvider = Get.find<MochiProvider>();
 
   return FutureBuilder(
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -134,7 +132,7 @@ Widget getGroupsWidget() {
                             color: Colors.orange,
                           ),
                           onPressed: () {
-                            _mochiProvider.updateMochiForCollect(
+                            mochiProvider.updateMochiForCollect(
                               snapshot.data.docs[index].reference.id,
                               'done',
                             );
@@ -164,5 +162,5 @@ Widget getGroupsWidget() {
 }
 
 Future loadGroups() async {
-  return await _fireStore.collection("orders").get();
+  return _fireStore.collection("orders").get();
 }

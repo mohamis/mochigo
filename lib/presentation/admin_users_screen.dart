@@ -2,8 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mochigo/controller/login_controller.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -25,7 +23,6 @@ class GroupsScreen extends StatelessWidget {
 }
 
 Widget getGroupsWidget() {
-  final LoginProvider loginProvider = Get.find<LoginProvider>();
 
   return FutureBuilder(
     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -75,5 +72,5 @@ Widget getGroupsWidget() {
 }
 
 Future loadGroups() async {
-  return await _fireStore.collection("user").get();
+  return _fireStore.collection("user").get();
 }

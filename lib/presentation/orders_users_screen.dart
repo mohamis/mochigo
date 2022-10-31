@@ -84,8 +84,7 @@ Widget getGroupsWidget() {
 }
 
 Future loadGroups(String email) async {
-  print(email);
-  return await _fireStore
+  return _fireStore
       .collection("orders")
       .where('ownerId', isEqualTo: email)
       .get();

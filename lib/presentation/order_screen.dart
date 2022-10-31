@@ -21,15 +21,17 @@ class PaymentScreen extends StatelessWidget {
         foregroundColor: Colors.black,
       ),
       body: Column(
-        children: [PaymentWidget()],
+        children: const <Widget>[PaymentWidget()],
       ),
     );
   }
 }
 
 class PaymentWidget extends StatefulWidget {
+  const PaymentWidget({super.key});
+
   @override
-  _PaymentWidgetState createState() => _PaymentWidgetState();
+  State<PaymentWidget> createState() => _PaymentWidgetState();
 }
 
 class _PaymentWidgetState extends State<PaymentWidget> {
@@ -44,177 +46,178 @@ class _PaymentWidgetState extends State<PaymentWidget> {
   Widget build(BuildContext context) {
     final CartProvider cartProvider = context.watch<CartProvider>();
 
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text("Name on Card"),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(12),
+                child: Text("Name on Card"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: TextFormField(
+                  autofocus: true,
+                  controller: _nameTextController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.grey[200],
+                    filled: true,
+                    border: InputBorder.none,
+                    hintText: "JOHN SMITH",
+                  ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(12),
-                  child: TextFormField(
-                    autofocus: true,
-                    controller: _nameTextController,
-                    decoration: InputDecoration(
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                      border: InputBorder.none,
-                      hintText: "JOHN SMITH",
+              ),
+              const Padding(
+                padding: EdgeInsets.all(12),
+                child: Text("Card Number"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: TextFormField(
+                  autofocus: true,
+                  controller: _cardNumberTextController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(19),
+                    CardNumberInputFormatter(),
+                  ],
+                  decoration: InputDecoration(
+                    fillColor: Colors.grey[200],
+                    filled: true,
+                    border: InputBorder.none,
+                    hintText: "5642 4418 1234 5678",
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12, left: 12),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Text("Expiration"),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: 8.0),
+                            child: Text("CVC"),
+                          ),
+                          Tooltip(
+                            message: "3 digit security number",
+                            preferBelow: false,
+                            verticalOffset: 8.0,
+                            child: Icon(
+                              Icons.help_outline,
+                              color: Colors.grey[400],
+                              size: 18.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      autofocus: true,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(6),
+                        ExpiryDateInputFormatter()
+                      ],
+                      controller: _expiryDateTextController,
+                      decoration: InputDecoration(
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                        border: InputBorder.none,
+                        hintText: "MM / YYYY",
+                      ),
                     ),
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text("Card Number"),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(12),
-                  child: TextFormField(
-                    autofocus: true,
-                    controller: _cardNumberTextController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      new LengthLimitingTextInputFormatter(19),
-                      CardNumberInputFormatter(),
-                    ],
-                    decoration: InputDecoration(
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                      border: InputBorder.none,
-                      hintText: "5642 4418 1234 5678",
+                  const Spacer(),
+                  Expanded(
+                    child: TextFormField(
+                      autofocus: true,
+                      controller: _cvcTextController,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(6),
+                      ],
+                      decoration: InputDecoration(
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                        border: InputBorder.none,
+                        hintText: "987",
+                      ),
                     ),
-                  ),
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 12,
+                  left: 12,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 12, left: 12),
-                  child: Row(
-                    children: [
-                      const Expanded(flex: 1, child: Text("Expiration")),
-                      Expanded(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 8.0),
-                                child: Text("CVC"),
-                              ),
-                              Tooltip(
-                                message: "3 digit security number",
-                                preferBelow: false,
-                                verticalOffset: 8.0,
-                                child: Icon(
-                                  Icons.help_outline,
-                                  color: Colors.grey[400],
-                                  size: 18.0,
-                                ),
-                              ),
-                            ],
-                          ))
-                    ],
-                  ),
-                ),
-                Row(
+                child: Row(
                   children: [
                     Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        autofocus: true,
-                        inputFormatters: [
-                          new LengthLimitingTextInputFormatter(6),
-                          ExpiryDateInputFormatter()
-                        ],
-                        controller: _expiryDateTextController,
-                        decoration: InputDecoration(
-                          fillColor: Colors.grey[200],
-                          filled: true,
-                          border: InputBorder.none,
-                          hintText: "MM / YYYY",
+                      flex: 2,
+                      child: Consumer<CartProvider>(
+                        builder: (
+                          BuildContext context,
+                          CartProvider cart,
+                          Widget? child,
+                        ) =>
+                            Text(
+                          'TOTAL: \$${cart.getTotalAmount().toString()}',
+                          style: const TextStyle(fontSize: 20.0),
                         ),
                       ),
                     ),
                     const Spacer(),
                     Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        autofocus: true,
-                        controller: _cvcTextController,
-                        inputFormatters: [
-                          new LengthLimitingTextInputFormatter(6),
-                        ],
-                        decoration: InputDecoration(
-                          fillColor: Colors.grey[200],
-                          filled: true,
-                          border: InputBorder.none,
-                          hintText: "987",
+                      flex: 2,
+                      child: TextButton(
+                        onPressed: () async {
+                          await addMochiForOrder(cartProvider);
+                        },
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6.0),
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 234, 148, 102),
+                                Color.fromARGB(255, 255, 175, 100)
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 36.0,
+                              vertical: 18.0,
+                            ),
+                            child: Text(
+                              "Pay",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ),
                       ),
                     )
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 12,
-                    left: 12,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Consumer<CartProvider>(
-                          builder: (BuildContext context, CartProvider cart,
-                                  Widget? child) =>
-                              Text(
-                            'TOTAL: \$${cart.getTotalAmount().toString()}',
-                            style: const TextStyle(fontSize: 20.0),
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Expanded(
-                        flex: 2,
-                        child: TextButton(
-                          onPressed: () async {
-                            await addMochiForOrder(cartProvider);
-                          },
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6.0),
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color.fromARGB(255, 234, 148, 102),
-                                  Color.fromARGB(255, 255, 175, 100)
-                                ],
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                              ),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 36.0,
-                                vertical: 18.0,
-                              ),
-                              child: Text(
-                                "Pay",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 
@@ -256,34 +259,39 @@ class _PaymentWidgetState extends State<PaymentWidget> {
 class CardNumberInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text;
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final String text = newValue.text;
 
     if (newValue.selection.baseOffset == 0) {
       return newValue;
     }
 
-    StringBuffer buffer = new StringBuffer();
+    final StringBuffer buffer = StringBuffer();
     for (int i = 0; i < text.length; i++) {
       buffer.write(text[i]);
-      int nonZeroIndex = i + 1;
+      final int nonZeroIndex = i + 1;
       if (nonZeroIndex % 4 == 0 && nonZeroIndex != text.length) {
         buffer.write('  '); // Add double spaces.
       }
     }
 
-    String string = buffer.toString();
+    final String string = buffer.toString();
     return newValue.copyWith(
-        text: string,
-        selection: new TextSelection.collapsed(offset: string.length));
+      text: string,
+      selection: TextSelection.collapsed(offset: string.length),
+    );
   }
 }
 
 class ExpiryDateInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    String text = newValue.text;
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final String text = newValue.text;
 
     if (newValue.selection.baseOffset == 0) {
       return newValue;
@@ -291,11 +299,14 @@ class ExpiryDateInputFormatter extends TextInputFormatter {
 
     String updatedString = text;
     if (text.length >= 2) {
-      updatedString = text.substring(0, 2) + " / " + text.substring(2);
+      updatedString = "${text.substring(0, 2)} / ${text.substring(2)}";
     }
 
     return newValue.copyWith(
-        text: updatedString,
-        selection: new TextSelection.collapsed(offset: updatedString.length));
+      text: updatedString,
+      selection: TextSelection.collapsed(
+        offset: updatedString.length,
+      ),
+    );
   }
 }

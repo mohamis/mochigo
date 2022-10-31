@@ -9,7 +9,7 @@ import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/firebase_options.dart';
 import 'package:mochigo/models/cart.dart';
 import 'package:mochigo/models/catelog.dart';
-import 'package:mochigo/presentation/on_boarding_screen.dart';
+import 'package:mochigo/presentation/loading_splash_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/cart_provider.dart';
@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
         child: GetMaterialApp(
           theme: MochigoTheme.mytheme,
           title: 'Mochigo: All taste good',
-          home: const OnBoardingScreen(),
+          home: const MyExplicitAnimation(),
         ),
       ),
     );
