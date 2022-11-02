@@ -7,7 +7,7 @@ An app for mochi lovers.
 
 ## 📍 Getting Started
 
-This project is made on Flutter 3.3.2 • channel stable •.
+This project was created on Flutter (Channel stable, 3.3.6, on macOS 13.0 22A380 darwin-arm, locale en-FR).
 
 The Mochigo project is a project that aims to create an app for selling and buying Mochi.
 Mochi (餅, もち) is a Japanese rice cake made of mochigome, a short-grain japonica glutinous rice, and sometimes other ingredients such as water, sugar, and cornstarch. The rice is pounded into paste and molded into the desired shape.
@@ -41,42 +41,63 @@ flutter pub get
 
 **Step 3:**
 
-...
+In the project root and execute the following command in console to launch the project:
+
+(example for chrome)
+
+```
+flutter run -d chrome
+```
 
 ---
 
 ## 🚀 Features:
 
--
-
-### 🎸 Up-Coming Features:
-
 - Splash Screen
 - Login
 - Home
+- Cart
 - Routing
+- Get controllers
+- Providers
 - Firebase
 - Logging via Crashlytics
+
+### 🎸 Up-Coming Features:
+
 - Dark Theme Support (new)
 
 ### 🧰 Libraries & Tools Used
 
 TO CHANGE
 
-- [Dio](https://github.com/flutterchina/dio)
-- [Database](https://github.com/tekartik/sembast.dart)
-- [MobX](https://github.com/mobxjs/mobx.dart) (to connect the reactive data of your application with the UI)
+- [Cloud Firestore](https://pub.dartlang.org/packages?q=cloud_firestore)
 - [Provider](https://github.com/rrousselGit/provider) (State Management)
-- [Encryption](https://github.com/xxtea/xxtea-dart)
-- [Validation](https://github.com/dart-league/validators)
-- [Logging](https://github.com/zubairehman/Flogs)
-- [Notifications](https://github.com/AndreHaueisen/flushbar)
-- [Json Serialization](https://github.com/dart-lang/json_serializable)
-- [Dependency Injection](https://github.com/fluttercommunity/get_it)
+- [Cupertino Icons](https://pub.dartlang.org/packages?q=cupertino_icons)
+- [Dart Cart](https://pub.dartlang.org/packages?q=dart_cart)
+- [Firebase Auth](https://pub.dartlang.org/packages?q=firebase_auth)
+- [Firebase Core](https://pub.dartlang.org/packages?q=firebase_core)
+- [Firebase Crashlytics](https://pub.dartlang.org/packages?q=firebase_crashlytics)
+- [Firebase Storage](https://pub.dartlang.org/packages?q=firebase_storage)
+- [Flutter](https://pub.dartlang.org/packages?q=flutter)
+- [Flutter Bloc](https://pub.dartlang.org/packages?q=flutter_bloc)
+- [Flutter carousel slider](https://pub.dartlang.org/packages?q=flutter_carousel_slider)
+- [Flutter Cart](https://pub.dartlang.org/packages?q=flutter_cart)
+- [Flutter Facebook Auth](https://pub.dartlang.org/packages?q=flutter_facebook_auth)
+- [Get 'Getx'](https://pub.dartlang.org/packages?q=get)
+- [Google fonts](https://pub.dartlang.org/packages?q=google_fonts)
+- [Hexcolor](https://pub.dartlang.org/packages?q=hexcolor)
+- [html](https://pub.dartlang.org/packages?q=html)
+- [Image picker](https://pub.dartlang.org/packages?q=image_picker)
+- [Image picker web](https://pub.dartlang.org/packages?q=image_picker_web)
+- [Ionicons](https://pub.dartlang.org/packages?q=ionicons)
+- [location](https://pub.dartlang.org/packages?q=location)
+- [Mime](https://pub.dartlang.org/packages?q=mime)
+- [Provider](https://pub.dartlang.org/packages?q=provider)
 
 # 🛣 Project
 
-A project created in flutter using MobX and Provider. We supports both web and mobile, follow the respective instructions here:
+A project created in flutter using GetX and Provider. We supports both web and mobile, follow the respective instructions here:
 
 - For Mobile: https://github.com/
 - For Web: https://github.com/
@@ -103,7 +124,17 @@ flutter-app/
 |- android
 |- build
 |- ios
-|- lib
+|- lib/
+|-- controller/ (for cotrollers)
+|-- core/
+|----models/
+|----theme/
+|-- presentation/ (screens are there)
+|----widgets/
+|-- providers/ (providers)
+|-- services/ (for services)
+|-- services/ (for storage services mainly)
+|-- utils/ (used for colors)
 |- test
 ```
 
@@ -126,48 +157,144 @@ ui/
 This is the starting point of the application. All the application level configurations are defined in this file i.e, theme, routes, title, orientation etc.
 
 ```dart
-import 'package:boilerplate/routes.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:mochigo/controller/login_controller.dart';
+import 'package:mochigo/controller/mochi_controller.dart';
+import 'package:mochigo/controller/user_controller.dart';
+import 'package:mochigo/core/theme/mochigo_theme.dart';
+import 'package:mochigo/firebase_options.dart';
+import 'package:mochigo/models/cart.dart';
+import 'package:mochigo/models/catelog.dart';
+import 'package:mochigo/presentation/loading_splash_screen.dart';
+import 'package:provider/provider.dart';
 
-import 'constants/app_theme.dart';
-import 'constants/strings.dart';
-import 'ui/splash/splash.dart';
+import 'providers/cart_provider.dart';
 
-void main() {
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeRight,
-    DeviceOrientation.landscapeLeft,
-  ]).then((_) {
-    runApp(MyApp());
-  });
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  /// Default [FirebaseOptions] for use with your Firebase apps.
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Pass all uncaught errors from the framework to Crashlytics.
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  MyApp({super.key});
+
+  final LoginProvider controller = Get.put(LoginProvider());
+  final UserProvider controllers = Get.put(UserProvider());
+  final MochiProvider controllersP = Get.put(MochiProvider());
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: Strings.appName,
-      theme: themeData,
-      routes: Routes.routes,
-      home: SplashScreen(),
+    return MultiProvider(
+      providers: [
+        // In this sample app, CatalogModel never changes, so a simple Provider
+        // is sufficient.
+        Provider(create: (BuildContext context) => CatalogModel()),
+        // CartModel is implemented as a ChangeNotifier, which calls for the use
+        // of ChangeNotifierProvider. Moreover, CartModel depends
+        // on CatalogModel, so a ProxyProvider is needed.
+        ChangeNotifierProxyProvider<CatalogModel, CartModel>(
+          create: (BuildContext context) => CartModel(),
+          update:
+              (BuildContext context, CatalogModel catalog, CartModel? cart) {
+            if (cart == null) throw ArgumentError.notNull('cart');
+            cart.catalog = catalog;
+            return cart;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CartProvider(),
+        ),
+      ],
+      child: GestureDetector(
+        onTap: () {
+          final FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus &&
+              currentFocus.focusedChild != null) {
+            currentFocus.focusedChild!.unfocus();
+          }
+        },
+        child: GetMaterialApp(
+          theme: MochigoTheme.mytheme,
+          title: 'Mochigo: All taste good',
+          home: const MyExplicitAnimation(),
+        ),
+      ),
     );
   }
 }
+
 ```
 
-## 📚 Wiki
+## 📚 Boilerplate used
 
-Checkout [wiki](https://github.com/zubairehman/flutter-boilerplate-project/wiki) for more info
+Checkout [wiki](https://github.com/zubairehman/flutter-boilerplate-project/wiki)
 
 ## 🎉 Conclusion
 
 I will be happy to answer any questions that you may have on this approach.
 If you liked our work, don’t forget to ⭐ star the repo to show your support.
+
+## 🖥️ flutter doctor result
+
+```log
+[✓] Flutter (Channel stable, 3.3.6, on macOS 13.0 22A380 darwin-arm, locale en-FR)
+    • Flutter version 3.3.6 on channel stable at /Users/mohamedchara/development/flutter
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision 6928314d50 (8 days ago), 2022-10-25 16:34:41 -0400
+    • Engine revision 3ad69d7be3
+    • Dart version 2.18.2
+    • DevTools version 2.15.0
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 33.0.0)
+    • Android SDK at /Users/mohamedchara/Library/Android/sdk
+    • Platform android-33, build-tools 33.0.0
+    • Java binary at: /Applications/Android Studio.app/Contents/jre/Contents/Home/bin/java
+    • Java version OpenJDK Runtime Environment (build 11.0.13+0-b1751.21-8125866)
+    • All Android licenses accepted.
+
+[✓] Xcode - develop for iOS and macOS (Xcode 14.0.1)
+    • Xcode at /Applications/Xcode.app/Contents/Developer
+    • Build 14A400
+    • CocoaPods version 1.11.3
+
+[✓] Chrome - develop for the web
+    • CHROME_EXECUTABLE = /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge
+
+[✓] Android Studio (version 2021.3)
+    • Android Studio at /Applications/Android Studio.app/Contents
+    • Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    • Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    • Java version OpenJDK Runtime Environment (build 11.0.13+0-b1751.21-8125866)
+
+[✓] VS Code (version 1.72.2)
+    • VS Code at /Applications/Visual Studio Code.app/Contents
+    • Flutter extension version 3.52.0
+
+[✓] Connected device (2 available)
+    • macOS (desktop) • macos  • darwin-arm64   • macOS 13.0 22A380 darwin-arm
+    • Chrome (web)    • chrome • web-javascript • Microsoft Edge 107.0.1418.28
+
+[✓] HTTP Host Availability
+    • All required HTTP hosts are available
+
+• No issues found!
+
+```
 
 ## 👨🏻‍💻 Team
 

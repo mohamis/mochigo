@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
-import 'package:mochigo/models/catelog.dart';
+import 'package:mochigo/core/models/catelog.dart';
 
 class CartModel extends ChangeNotifier {
   /// The private field backing [catalog].

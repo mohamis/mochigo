@@ -7,8 +7,8 @@ import 'package:mochigo/controller/mochi_controller.dart';
 import 'package:mochigo/controller/user_controller.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/firebase_options.dart';
-import 'package:mochigo/models/cart.dart';
-import 'package:mochigo/models/catelog.dart';
+import 'package:mochigo/core/models/cart.dart';
+import 'package:mochigo/core/models/catelog.dart';
 import 'package:mochigo/presentation/loading_splash_screen.dart';
 import 'package:provider/provider.dart';
 

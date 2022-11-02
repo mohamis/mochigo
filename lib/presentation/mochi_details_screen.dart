@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mochigo/models/sm_product_model.dart';
+import 'package:mochigo/core/models/sm_product_model.dart';
 import 'package:mochigo/utils/color.dart';
 
 class MochiDetailsScreen extends StatefulWidget {
