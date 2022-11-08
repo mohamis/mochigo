@@ -61,24 +61,8 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
 
         _imagesWidgetListPrimary.add(imagePickerWidget(widget.size));
       });
-    }
-    // WEB
-    else if (kIsWeb) {
-      List<html.File>? webFiles = [];
-      html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-      uploadInput.click();
-      uploadInput.onChange.listen(
-        (e) {
-          webFiles = uploadInput.files;
-          for (html.File webFile in webFiles!) {
-            if (webFile.size < 4194304) {
-              images = webFile as File;
-
-              // _imagesWidgetListPrimary.add(webFile);
-            }
-          }
-        },
-      );
+      // WEB
+      // kIsWeb
     } else {
       print("Permission not granted");
     }
@@ -86,34 +70,57 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 211, 245),
-        foregroundColor: Colors.black,
-        title: const Text(
-          "Add Mochi to the catalog",
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: size.height * 0.3,
-                width: size.width,
-                child: _imagesWidgetListPrimary.isEmpty
-                    ? imagePickerWidget(size)
-                    : slider(size),
-              ),
-              addMochidataField()
-            ],
+    if (!kIsWeb) {
+      final Size size = MediaQuery.of(context).size;
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 255, 211, 245),
+          foregroundColor: Colors.black,
+          title: const Text(
+            "Add Mochi to the catalog",
           ),
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: size.height * 0.3,
+                  width: size.width,
+                  child: _imagesWidgetListPrimary.isEmpty
+                      ? imagePickerWidget(size)
+                      : slider(size),
+                ),
+                addMochidataField()
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 255, 211, 245),
+          foregroundColor: Colors.black,
+          title: const Text(
+            "Admin feature available on mobile",
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text("This feature is only available on mobile")
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   //image picker widget
