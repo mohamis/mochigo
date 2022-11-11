@@ -13,7 +13,6 @@ import 'package:mochigo/controller/mochi_controller.dart';
 import 'package:mochigo/core/models/mochi_model.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/presentation/home_screen.dart';
-import 'dart:html' as html;
 
 class AddMochiScreen extends StatefulWidget {
   const AddMochiScreen({super.key, required this.size});
