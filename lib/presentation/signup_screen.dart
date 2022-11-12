@@ -20,70 +20,74 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SizedBox(
-        height: size.height,
-        width: size.width,
-        child: Stack(
-          children: [
-            Positioned(
-              top: -10,
-              left: -50,
-              child: Container(
-                width: size.width * 0.4,
-                height: size.width * 0.4,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: [
-                      Color.fromARGB(255, 244, 219, 223),
-                      Color.fromARGB(255, 255, 211, 245),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -200,
-              right: -100,
-              child: Container(
-                width: size.width * 0.8,
-                height: size.width * 0.8,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: [
-                      Color.fromARGB(255, 255, 211, 245),
-                      Color.fromARGB(255, 244, 219, 223),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    Assets.LOGOVECTOR,
-                    scale: 1,
-                    fit: BoxFit.scaleDown,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: Text(
-                      "Sign Up!",
-                      style: Theme.of(context).textTheme.bodyText1,
+      body: Center(
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: size.height,
+            width: size.width,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -10,
+                  left: -50,
+                  child: Container(
+                    width: size.width * 0.4,
+                    height: size.width * 0.4,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment(0.8, 1),
+                        colors: [
+                          Color.fromARGB(255, 244, 219, 223),
+                          Color.fromARGB(255, 255, 211, 245),
+                        ],
+                      ),
                     ),
                   ),
-                  loginUi(size: size, context: context),
-                ],
-              ),
+                ),
+                Positioned(
+                  bottom: -200,
+                  right: -100,
+                  child: Container(
+                    width: size.width * 0.8,
+                    height: size.width * 0.8,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment(0.8, 1),
+                        colors: [
+                          Color.fromARGB(255, 255, 211, 245),
+                          Color.fromARGB(255, 244, 219, 223),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        Assets.LOGOVECTOR,
+                        scale: 1,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Text(
+                          "Sign Up!",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ),
+                      loginUi(size: size, context: context),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -104,7 +108,7 @@ class SignUpScreen extends StatelessWidget {
                 child: TextField(
                   controller: _usernameController,
                   decoration: const InputDecoration(hintText: 'Username'),
-                  textCapitalization: TextCapitalization.none,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
               ),
               const SizedBox(
@@ -115,7 +119,7 @@ class SignUpScreen extends StatelessWidget {
                 child: TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(hintText: 'Email'),
-                  textCapitalization: TextCapitalization.none,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
               ),
               const SizedBox(
@@ -129,7 +133,7 @@ class SignUpScreen extends StatelessWidget {
                   decoration: const InputDecoration(
                     hintText: 'Password',
                   ),
-                  textCapitalization: TextCapitalization.none,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
               ),
               const SizedBox(

@@ -33,6 +33,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          // ignore: avoid_redundant_argument_values
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(

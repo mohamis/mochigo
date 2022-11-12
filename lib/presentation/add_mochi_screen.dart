@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, invalid_use_of_visible_for_testing_member, always_specify_types
+// ignore_for_file: library_private_types_in_public_api, invalid_use_of_visible_for_testing_member, always_specify_types, unnecessary_null_comparison
 
 import 'dart:io';
 
@@ -50,20 +50,25 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
     if (!kIsWeb) {
       final PickedFile? image = await ImagePicker.platform
           .pickImage(source: ImageSource.gallery, imageQuality: 40);
-      setState(() {
-        _imagesWidgetListPrimary.removeWhere(
-          (Widget element) => element == _imagesWidgetListPrimary.last,
-        );
-        images = File(image!.path);
+      if (image == null) {
+        Get.snackbar('Error', 'Images were not recieved');
+      } else {
+        setState(() {
+          _imagesWidgetListPrimary.removeWhere(
+            (Widget element) => element == _imagesWidgetListPrimary.last,
+          );
 
-        _imagesWidgetListPrimary.add(Image.file(File(image.path)));
+          images = File(image!.path);
 
-        _imagesWidgetListPrimary.add(imagePickerWidget(widget.size));
-      });
+          _imagesWidgetListPrimary.add(Image.file(File(image.path)));
+
+          _imagesWidgetListPrimary.add(imagePickerWidget(widget.size));
+        });
+      }
       // WEB
       // kIsWeb
     } else {
-      print("Permission not granted");
+      Get.snackbar('Error', 'Permission not granted');
     }
   }
 

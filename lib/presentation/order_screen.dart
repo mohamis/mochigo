@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cart/model/cart_model.dart';
@@ -48,11 +50,11 @@ class _PaymentWidgetState extends State<PaymentWidget> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+      children: <Widget>[
         Form(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: <Widget>[
               const Padding(
                 padding: EdgeInsets.all(12),
                 child: Text("Name on Card"),
@@ -80,7 +82,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                   autofocus: true,
                   controller: _cardNumberTextController,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
+                  inputFormatters: <TextInputFormatter>[
                     LengthLimitingTextInputFormatter(19),
                     CardNumberInputFormatter(),
                   ],
@@ -95,13 +97,13 @@ class _PaymentWidgetState extends State<PaymentWidget> {
               Padding(
                 padding: const EdgeInsets.only(top: 12, left: 12),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     const Expanded(
                       child: Text("Expiration"),
                     ),
                     Expanded(
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           const Padding(
                             padding: EdgeInsets.only(right: 8.0),
                             child: Text("CVC"),
@@ -123,11 +125,11 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                 ),
               ),
               Row(
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: TextFormField(
                       autofocus: true,
-                      inputFormatters: [
+                      inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(6),
                         ExpiryDateInputFormatter()
                       ],
@@ -145,7 +147,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                     child: TextFormField(
                       autofocus: true,
                       controller: _cvcTextController,
-                      inputFormatters: [
+                      inputFormatters: <TextInputFormatter>[
                         LengthLimitingTextInputFormatter(6),
                       ],
                       decoration: InputDecoration(
@@ -164,7 +166,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                   left: 12,
                 ),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       flex: 2,
                       child: Consumer<CartProvider>(
@@ -190,7 +192,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6.0),
                             gradient: const LinearGradient(
-                              colors: [
+                              colors: <Color>[
                                 Color.fromARGB(255, 234, 148, 102),
                                 Color.fromARGB(255, 255, 175, 100)
                               ],
@@ -225,9 +227,10 @@ class _PaymentWidgetState extends State<PaymentWidget> {
   final MochiProvider _mochiProvider = Get.find<MochiProvider>();
 
   Future<void> addMochiForOrder(CartProvider cartProvider) async {
+    // ignore: unnecessary_null_comparison
     if (cartProvider != null) {
       //creating new instance of mochimodel
-      final List<MochiOrder> newMochi = [];
+      final List<MochiOrder> newMochi = <MochiOrder>[];
       for (CartItem f in cartProvider.flutterCart.cartItem) {
         newMochi.add(
           MochiOrder(

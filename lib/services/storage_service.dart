@@ -14,6 +14,7 @@ class StorageService {
     final List<String> allUrl = [];
     String current;
 
+    // ignore: avoid_function_literals_in_foreach_calls
     files.forEach((File file) async {
       final int index = files.indexOf(file);
       current = await uploadSingleFile(file, id, index);

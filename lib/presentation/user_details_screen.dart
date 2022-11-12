@@ -26,7 +26,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   }
 
   //testing purpose data
-  List<String> categories = [
+  List<String> categories = <String>[
     'Filled',
     'Special',
     'Mystery Box',
@@ -46,7 +46,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         children: categories.map(
           (String currentCategory) {
             return InkWell(
-              onTap: () => {
+              onTap: () => <void>{
                 setState(
                   () => selectedCategory = currentCategory,
                 ),
@@ -144,7 +144,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                FutureBuilder(
+                FutureBuilder<String>(
                   future:
                       userProvider.findUserName(loginProvider.userData.email),
                   builder:
@@ -189,12 +189,15 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             ),
           if (loginProvider.userData.userType.compareTo('admin') == 0)
             Expanded(
-              child: StreamBuilder(
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: FirebaseFirestore.instance
                     .collection(liveCategory)
                     .snapshots(),
-                builder:
-                    (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                      streamSnapshot,
+                ) {
                   if (streamSnapshot.connectionState !=
                       ConnectionState.active) {
                     return const Center(

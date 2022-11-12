@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mochigo/controller/login_controller.dart';
 import 'package:mochigo/core/theme/assets.dart';
-import 'package:mochigo/presentation/home_screen.dart';
-import 'package:mochigo/presentation/signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -19,70 +17,74 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SizedBox(
-        height: size.height,
-        width: size.width,
-        child: Stack(
-          children: [
-            Positioned(
-              top: -10,
-              left: -50,
-              child: Container(
-                width: size.width * 0.4,
-                height: size.width * 0.4,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: [
-                      Color.fromARGB(255, 244, 219, 223),
-                      Color.fromARGB(255, 255, 211, 245),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -200,
-              right: -100,
-              child: Container(
-                width: size.width * 0.8,
-                height: size.width * 0.8,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment(0.8, 1),
-                    colors: [
-                      Color.fromARGB(255, 255, 211, 245),
-                      Color.fromARGB(255, 244, 219, 223),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    Assets.LOGOVECTOR,
-                    scale: 1,
-                    fit: BoxFit.scaleDown,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: Text(
-                      "Welcome Back!",
-                      style: Theme.of(context).textTheme.bodyText1,
+      body: Center(
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: size.height,
+            width: size.width,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -10,
+                  left: -50,
+                  child: Container(
+                    width: size.width * 0.4,
+                    height: size.width * 0.4,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment(0.8, 1),
+                        colors: [
+                          Color.fromARGB(255, 244, 219, 223),
+                          Color.fromARGB(255, 255, 211, 245),
+                        ],
+                      ),
                     ),
                   ),
-                  loginUi(size: size, context: context),
-                ],
-              ),
+                ),
+                Positioned(
+                  bottom: -200,
+                  right: -100,
+                  child: Container(
+                    width: size.width * 0.8,
+                    height: size.width * 0.8,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment(0.8, 1),
+                        colors: [
+                          Color.fromARGB(255, 255, 211, 245),
+                          Color.fromARGB(255, 244, 219, 223),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        Assets.LOGOVECTOR,
+                        scale: 1,
+                        fit: BoxFit.scaleDown,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Text(
+                          "Welcome Back!",
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ),
+                      loginUi(size: size, context: context),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -103,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                 child: TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(hintText: 'Email'),
-                  textCapitalization: TextCapitalization.none,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
               ),
               const SizedBox(
@@ -117,7 +119,7 @@ class LoginScreen extends StatelessWidget {
                   decoration: const InputDecoration(
                     hintText: 'Password',
                   ),
-                  textCapitalization: TextCapitalization.none,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
               ),
               const SizedBox(
@@ -128,7 +130,8 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6.0),
                   gradient: const LinearGradient(
                     begin: Alignment(-0.95, 0.0),
-                    end: Alignment(1.0, 0.0),
+                    // ignore: avoid_redundant_argument_values
+                    end: Alignment.centerRight,
                     colors: [
                       Color.fromARGB(255, 234, 148, 102),
                       Color.fromARGB(255, 255, 175, 100)
@@ -154,7 +157,7 @@ class LoginScreen extends StatelessWidget {
 
                     //route if sign in successful
                     if (outCome) {
-                      await Get.to(() => const HomeScreen());
+                      await Get.toNamed('HomeScreen');
                     }
                   },
                   child: const Text(
@@ -185,8 +188,7 @@ class LoginScreen extends StatelessWidget {
                       text: 'Sign Up',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                       recognizer: TapGestureRecognizer()
-                        ..onTap =
-                            () async => await Get.to(() => SignUpScreen()),
+                        ..onTap = () async => await Get.toNamed('SignUpScreen'),
                     ),
                   ],
                 ),

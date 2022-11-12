@@ -18,6 +18,7 @@ class MyCatalog extends StatelessWidget {
     required this.streamSnapshot,
   });
 
+  // ignore: always_specify_types
   final AsyncSnapshot<QuerySnapshot> streamSnapshot;
   final LoginProvider loginProvider = Get.find<LoginProvider>();
 
@@ -40,7 +41,7 @@ class MyCatalog extends StatelessWidget {
           color: MochigoTheme.PRIMARY_COLOR,
         ),
         child: Row(
-          children: [
+          children: <Widget>[
             Expanded(
               flex: 2,
               child: Container(
@@ -60,13 +61,13 @@ class MyCatalog extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Container(
-                padding: const EdgeInsets.only(),
+                padding: EdgeInsets.zero,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                  children: <Widget>[
                     Row(
-                      children: [
+                      children: <Widget>[
                         Expanded(
                           child: Text(
                             streamSnapshot.data?.docs[index].get('name'),
@@ -185,33 +186,6 @@ class __AddButtonState extends State<_AddButton> {
     // This can lead to significant performance improvements.
 
     _isInCart = _checkItemisInCart();
-
-    /* return Row(
-      children: [
-        _itemCount != 0
-            ? new IconButton(
-                icon: new Icon(Icons.remove),
-                onPressed: () {
-                  setState(() {
-                    _cartProvider.decrementItemFromCartProvider(
-                        _cartItem!.itemCartIndex);
-                    _itemCount--;
-                  });
-                },
-              )
-            : new Container(),
-        new Text(_itemCount.toString()),
-        new IconButton(
-            icon: new Icon(Icons.add),
-            onPressed: () {
-              setState(() {
-                _cartProvider
-                    .incrementItemToCartProvider(_cartItem!.itemCartIndex);
-                _itemCount++;
-              });
-            })
-      ],
-    ); */
 
     return TextButton(
       onPressed: _isInCart != 0

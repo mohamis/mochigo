@@ -52,6 +52,7 @@ class MochiProvider extends GetxController {
       final CollectionReference reference =
           FirebaseFirestore.instance.collection('orders');
 
+      // ignore: avoid_function_literals_in_foreach_calls
       mochiModel.forEach((MochiOrder file) async {
         await reference.add(file.toJson(file));
       });

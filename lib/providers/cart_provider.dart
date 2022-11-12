@@ -42,13 +42,13 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int? findItemIndexFromCartProvider(cartId) {
+  int? findItemIndexFromCartProvider(dynamic cartId) {
     final int? index = flutterCart.findItemIndexFromCart(cartId);
     return index;
   }
 
   //show already added items with their quantity on servicelistdetail screen
-  CartItem? getSpecificItemFromCartProvider(id) {
+  CartItem? getSpecificItemFromCartProvider(dynamic id) {
     final CartItem? cartItem = flutterCart.getSpecificItemFromCart(id);
 
     if (cartItem != null) {

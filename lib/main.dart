@@ -1,3 +1,5 @@
+// ignore_for_file: always_specify_types
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +11,9 @@ import 'package:mochigo/core/models/cart.dart';
 import 'package:mochigo/core/models/catelog.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
 import 'package:mochigo/firebase_options.dart';
-import 'package:mochigo/presentation/loading_splash_screen.dart';
+import 'package:mochigo/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'providers/cart_provider.dart';
 
@@ -24,7 +27,9 @@ void main() async {
 
   // Pass all uncaught errors from the framework to Crashlytics.
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
+// Here we set the URL strategy for our web app.
+  // It is safe to call this function when running on mobile or desktop as well.
+  setPathUrlStrategy();
   runApp(MyApp());
 }
 
@@ -70,7 +75,8 @@ class MyApp extends StatelessWidget {
         child: GetMaterialApp(
           theme: MochigoTheme.mytheme,
           title: 'Mochigo: All taste good',
-          home: const MyExplicitAnimation(),
+          initialRoute: '/',
+          getPages: appRoutes(),
         ),
       ),
     );

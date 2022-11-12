@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: always_specify_types
+
 import 'package:flutter/material.dart';
 
 /// A proxy of the catalog of items the user can buy.

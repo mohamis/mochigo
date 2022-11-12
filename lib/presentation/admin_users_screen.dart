@@ -23,8 +23,8 @@ class GroupsScreen extends StatelessWidget {
 }
 
 Widget getGroupsWidget() {
-
-  return FutureBuilder(
+  return FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+    // ignore: always_specify_types
     builder: (BuildContext context, AsyncSnapshot snapshot) {
       if (!snapshot.hasData) {
         return const Center(child: CircularProgressIndicator());
@@ -71,6 +71,6 @@ Widget getGroupsWidget() {
   );
 }
 
-Future loadGroups() async {
+Future<QuerySnapshot<Map<String, dynamic>>> loadGroups() async {
   return _fireStore.collection("user").get();
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: always_specify_types
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mochigo/presentation/order_screen.dart';

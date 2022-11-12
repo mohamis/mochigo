@@ -40,6 +40,7 @@ class _AdminOrderPageState extends State<AdminOrderPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          // ignore: avoid_redundant_argument_values
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(

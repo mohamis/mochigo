@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mochigo/core/theme/assets.dart';
-import 'package:mochigo/presentation/on_boarding_screen.dart';
 
 class MyExplicitAnimation extends StatefulWidget {
   const MyExplicitAnimation({Key? key}) : super(key: key);
@@ -21,7 +20,8 @@ class _MyExplicitAnimationState extends State<MyExplicitAnimation>
         AnimationController(vsync: this, duration: const Duration(seconds: 3))
           ..addStatusListener((AnimationStatus status) async {
             if (status == AnimationStatus.completed) {
-              await Get.to(() => const OnBoardingScreen());
+              await Get.toNamed('OnBoardingScreen');
+              // await Get.to(() => const OnBoardingScreen());
             }
           });
 
@@ -39,11 +39,11 @@ class _MyExplicitAnimationState extends State<MyExplicitAnimation>
     return Scaffold(
       body: AnimatedBuilder(
         animation: _animationController,
-        builder: (context, child) {
+        builder: (BuildContext context, Widget? child) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 const SizedBox(
                   height: 20,
                 ),

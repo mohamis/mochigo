@@ -27,7 +27,8 @@ class OrderUsersScreen extends StatelessWidget {
 Widget getGroupsWidget() {
   final LoginProvider loginProvider = Get.find<LoginProvider>();
 
-  return FutureBuilder(
+  return FutureBuilder<dynamic>(
+    // ignore: always_specify_types
     builder: (BuildContext context, AsyncSnapshot snapshot) {
       if (!snapshot.hasData) {
         return const Center(child: CircularProgressIndicator());
@@ -83,7 +84,10 @@ Widget getGroupsWidget() {
   );
 }
 
-Future loadGroups(String email) async {
+// ignore: always_specify_types
+Future loadGroups(
+  String email,
+) async {
   return _fireStore
       .collection("orders")
       .where('ownerId', isEqualTo: email)

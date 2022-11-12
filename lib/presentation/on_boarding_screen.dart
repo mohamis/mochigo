@@ -1,12 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, always_specify_types, avoid_unnecessary_containers
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mochigo/core/theme/assets.dart';
 import 'package:mochigo/core/theme/mochigo_theme.dart';
-import 'package:mochigo/presentation/login_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -59,7 +56,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   borderRadius: BorderRadius.circular(6.0),
                   gradient: const LinearGradient(
                     begin: Alignment(-0.95, 0.0),
-                    end: Alignment(1.0, 0.0),
+                    // ignore: avoid_redundant_argument_values
+                    end: Alignment.centerRight,
                     colors: [
                       Color.fromARGB(255, 234, 148, 102),
                       Color.fromARGB(255, 255, 175, 100)
@@ -77,7 +75,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     shadowColor: Colors.transparent,
                   ),
                   onPressed: () async {
-                    await Get.to(() => LoginScreen());
+                    await Get.toNamed('LoginScreen');
+
+                    // await Get.to(() => LoginScreen());
                   },
                   child: const Text(
                     '👉🏻 Go to login',

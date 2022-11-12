@@ -25,7 +25,7 @@ class MochiDetailsScreen extends StatefulWidget {
 class __MochiDetailsScreenState extends State<MochiDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    final List<SmProduct> smProducts = [
+    final List<SmProduct> smProducts = <SmProduct>[
       SmProduct(image: 'assets/images/products/mochi-yuzu.jpg'),
       SmProduct(image: 'assets/images/products/mochi-choco.jpg'),
       SmProduct(image: 'assets/images/products/mochi-anko.jpg'),
@@ -38,7 +38,7 @@ class __MochiDetailsScreenState extends State<MochiDetailsScreen> {
         foregroundColor: Colors.black,
       ),
       body: Column(
-        children: [
+        children: <Widget>[
           Container(
             height: MediaQuery.of(context).size.height * .35,
             padding: const EdgeInsets.only(bottom: 30),
@@ -50,7 +50,7 @@ class __MochiDetailsScreenState extends State<MochiDetailsScreen> {
           ),
           Expanded(
             child: Stack(
-              children: [
+              children: <Widget>[
                 Container(
                   height: double.infinity,
                   padding: const EdgeInsets.only(top: 40, right: 14, left: 14),
@@ -64,7 +64,7 @@ class __MochiDetailsScreenState extends State<MochiDetailsScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                      children: <Widget>[
                         Text(
                           'Mochi',
                           style: GoogleFonts.poppins(
@@ -74,7 +74,7 @@ class __MochiDetailsScreenState extends State<MochiDetailsScreen> {
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
+                          children: <Widget>[
                             Text(
                               widget.title,
                               style: GoogleFonts.poppins(

@@ -153,7 +153,7 @@ class LoginProvider extends GetxController {
               .where('email', isEqualTo: email)
               .get();
 
-      if (user != null) {
+      if (user != null && snapshot.docs.isNotEmpty) {
         userData = UserModel(
           userId: userCredential.user!.uid,
           email: userCredential.user!.email as String,
@@ -165,10 +165,13 @@ class LoginProvider extends GetxController {
           provider: 'Email',
         );
       }
+      if (snapshot.docs.isEmpty) {
+        Get.snackbar('Please check your credentials', 'Retry to login');
+        return false;
+      }
       //adding new user data to database
       await userProvider.addUser(userData);
       Get.snackbar('Sign in user successfully', '');
-
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -265,6 +268,7 @@ class LoginProvider extends GetxController {
       await FirebaseAuth.instance.signOut();
 
       await Get.offAll(() => LoginScreen());
+      await Get.deleteAll();
       Get.snackbar('You just logged out.', '');
 
       return true;
