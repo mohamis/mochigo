@@ -5,6 +5,8 @@ An app for mochi lovers.
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
 
+[![Codemagic build status](https://api.codemagic.io/apps/635fc359988981e40b71641c/635fc359988981e40b71641b/status_badge.svg)](https://codemagic.io/apps/635fc359988981e40b71641c/635fc359988981e40b71641b/latest_build)
+
 ## 📍 Getting Started
 
 This project was created on Flutter (Channel stable, 3.3.6, on macOS 13.0 22A380 darwin-arm, locale en-FR).
