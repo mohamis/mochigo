@@ -58,7 +58,7 @@ class _AddMochiScreenState extends State<AddMochiScreen> {
             (Widget element) => element == _imagesWidgetListPrimary.last,
           );
 
-          images = File(image!.path);
+          images = File(image.path);
 
           _imagesWidgetListPrimary.add(Image.file(File(image.path)));
 
